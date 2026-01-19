@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Mini Autorizador API
+  description: API REST para criação de cartões, consulta de saldo e autorização de transações.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+security:
+  - basicAuth: []
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    CartaoRequest:
+      type: object
+      properties:
+        numeroCartao:
+          type: string
+          example: "6549873025634501"
+        senha:
+          type: string
+          example: "1234"
+      required:
+        - numeroCartao
+        - senha
+
+    CartaoResponse:
+      type: object
+      properties:
+        numeroCartao:
+          type: string
+          example: "6549873025634501"
+        senha:
+          type: string
+          example: "1234"
+
+    TransacaoRequest:
+      type: object
+      properties:
+        numeroCartao:
+          type: string
+          example: "6549873025634501"
+        senhaCartao:
+          type: string
+          example: "1234"
+        valor:
+          type: string
+          format: decimal
+          example: 10.00
+      required:
+        - numeroCartao
+        - senhaCartao
+        - valor
+
+paths:
+  /cartoes:
+    post:
+      summary: Criar novo cartão
+      description: Cria um cartão com saldo inicial de R$500,00.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartaoRequest'
+      responses:
+        '201':
+          description: Criação com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartaoResponse'
+        '422':
+          description: Cartão já existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartaoResponse'
+        '401':
+          description: Erro de autenticação
+
+  /cartoes/{numeroCartao}:
+    get:
+      summary: Obter saldo do cartão
+      description: Retorna o saldo disponível do cartão informado.
+      security:
+        - basicAuth: []
+      parameters:
+        - name: numeroCartao
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "6549873025634501"
+      responses:
+        '200':
+          description: Obtenção com sucesso
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: decimal
+                example: 495.15
+        '404':
+          description: Cartão não existe
+        '401':
+          description: Erro de autenticação
+
+  /transacoes:
+    post:
+      summary: Realizar uma transação
+      description: Autoriza ou rejeita uma transação de pagamento com cartão.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransacaoRequest'
+      responses:
+        '201':
+          description: Transação realizada com sucesso
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK"
+        '422':
+          description: Transação não autorizada
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum: [SALDO_INSUFICIENTE, SENHA_INVALIDA, CARTAO_INEXISTENTE]
+        '401':
+          description: Erro de autenticação
