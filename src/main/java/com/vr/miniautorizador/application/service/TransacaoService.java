@@ -1,7 +1,7 @@
 package com.vr.miniautorizador.application.service;
 
-import com.vr.miniautorizador.application.usecase.ResultadoTransacao;
-import com.vr.miniautorizador.application.usecase.TransacaoUseCase;
+import com.vr.miniautorizador.application.usecase.transacao.ResultadoTransacao;
+import com.vr.miniautorizador.application.usecase.transacao.TransacaoUseCase;
 import com.vr.miniautorizador.interfaces.dto.TransacaoRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

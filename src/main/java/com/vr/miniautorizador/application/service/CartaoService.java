@@ -1,7 +1,7 @@
 package com.vr.miniautorizador.application.service;
 
-import com.vr.miniautorizador.application.usecase.CartaoUseCase;
-import com.vr.miniautorizador.application.usecase.ResultadoCriarCartao;
+import com.vr.miniautorizador.application.usecase.cartao.CartaoUseCase;
+import com.vr.miniautorizador.application.usecase.cartao.ResultadoCriarCartao;
 import com.vr.miniautorizador.domain.model.entities.Cartao;
 import com.vr.miniautorizador.interfaces.dto.CartaoRequest;
 import jakarta.transaction.Transactional;

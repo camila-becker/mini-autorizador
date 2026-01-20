@@ -1,7 +1,7 @@
 package com.vr.miniautorizador.interfaces.controller;
 
 import com.vr.miniautorizador.application.service.TransacaoService;
-import com.vr.miniautorizador.application.usecase.ResultadoTransacao;
+import com.vr.miniautorizador.application.usecase.transacao.ResultadoTransacao;
 import com.vr.miniautorizador.domain.enums.ResultadoTransacaoEnum;
 import com.vr.miniautorizador.interfaces.dto.TransacaoRequest;
 import io.swagger.v3.oas.annotations.Operation;

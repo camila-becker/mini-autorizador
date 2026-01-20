@@ -2,7 +2,7 @@ package com.vr.miniautorizador.interfaces.controller;
 
 import com.vr.miniautorizador.application.mapper.CartaoMapper;
 import com.vr.miniautorizador.application.service.CartaoService;
-import com.vr.miniautorizador.application.usecase.ResultadoCriarCartao;
+import com.vr.miniautorizador.application.usecase.cartao.ResultadoCriarCartao;
 import com.vr.miniautorizador.interfaces.dto.CartaoRequest;
 import com.vr.miniautorizador.interfaces.dto.CartaoResponse;
 import io.swagger.v3.oas.annotations.Operation;

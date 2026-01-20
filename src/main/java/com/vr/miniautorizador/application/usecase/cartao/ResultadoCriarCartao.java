@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.application.usecase;
+package com.vr.miniautorizador.application.usecase.cartao;
 
 import com.vr.miniautorizador.domain.model.entities.Cartao;
 

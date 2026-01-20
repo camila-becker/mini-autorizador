@@ -1,10 +1,9 @@
 package com.vr.miniautorizador.domain.model.rules;
 
-import com.vr.miniautorizador.application.usecase.ResultadoTransacao;
+import com.vr.miniautorizador.application.usecase.transacao.ResultadoTransacao;
 import com.vr.miniautorizador.domain.model.entities.Cartao;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Optional;
 
 public class RegraCartaoExistente implements RegraTransacao{
