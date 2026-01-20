@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CriarCartaoUseCaseTest {
+class CartaoUseCaseTest {
 
     @Mock
     private CartaoRepository cartaoRepository;
 
     @InjectMocks
-    private CriarCartaoUseCase useCase;
+    private CartaoUseCase useCase;
 
     @Test
     void deveRetornarCartaoQuandoBuscarPorNumeroExistente() {

@@ -5,11 +5,11 @@ import com.vr.miniautorizador.domain.repository.CartaoRepository;
 
 import java.util.Optional;
 
-public class CriarCartaoUseCase {
+public class CartaoUseCase {
 
     private final CartaoRepository cartaoRepository;
 
-    public CriarCartaoUseCase(CartaoRepository cartaoRepository) {
+    public CartaoUseCase(CartaoRepository cartaoRepository) {
         this.cartaoRepository = cartaoRepository;
     }
 
