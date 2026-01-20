@@ -1,6 +1,5 @@
 package com.vr.miniautorizador.domain.model.entities;
 
-import com.vr.miniautorizador.domain.exceptions.SaldoInsuficienteException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,11 +32,6 @@ public class Cartao {
     }
 
     public void debitar(BigDecimal valor) {
-
-        if(valor.compareTo(this.saldo) > 0) {
-            throw new SaldoInsuficienteException();
-        }
-
         this.saldo = this.saldo.subtract(valor);
     }
 
