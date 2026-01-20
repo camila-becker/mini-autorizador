@@ -7,6 +7,8 @@ import com.vr.miniautorizador.interfaces.dto.CartaoRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CartaoService {
 
@@ -26,6 +28,10 @@ public class CartaoService {
                     return new ResultadoCriarCartao.Criado(novo);
                 });
 
+    }
+
+    public Optional<Cartao> obterSaldoCartao(String numeroCartao) {
+       return criarCartaoUseCase.buscarPorNumero(numeroCartao);
     }
 
 }
