@@ -50,8 +50,8 @@ components:
           type: string
           example: "1234"
         valor:
-          type: string
-          format: decimal
+          type: number
+          format: double
           example: 10.00
       required:
         - numeroCartao
@@ -106,8 +106,8 @@ paths:
           content:
             text/plain:
               schema:
-                type: string
-                format: decimal
+                type: number
+                format: double
                 example: 495.15
         '404':
           description: Cartão não existe
