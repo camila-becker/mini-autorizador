@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.application.usecase;
+package com.vr.miniautorizador.application.usecase.transacao;
 
 public sealed interface ResultadoTransacao
         permits ResultadoTransacao.Ok,
