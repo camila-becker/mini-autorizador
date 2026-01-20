@@ -19,14 +19,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.vr.miniautorizador.constants.TestesCartaoConstantes.*;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class CartaoControllerTest {
@@ -48,7 +51,7 @@ class CartaoControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("cenariosValidos")
+    @MethodSource("cenariosCriarCartao")
     void deveRetornarStatusEsperado(ResultadoCriarCartao resultado, int statusEsperado, Cartao cartao,
                                     CartaoResponse response, Class<?> tipoEsperado) throws Exception {
 
@@ -59,14 +62,14 @@ class CartaoControllerTest {
         ResultadoCriarCartao resultadoReal = service.criarCartao(request);
         assertInstanceOf(tipoEsperado, resultadoReal);
 
-        mockMvc.perform(post("/cartoes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(PAYLOAD))
+        mockMvc.perform(
+                        post("/cartoes")
+                                .with(httpBasic("username", "password"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(PAYLOAD))
                 .andExpect(status().is(statusEsperado))
                 .andExpect(jsonPath("$.numeroCartao").value(NUMERO_CARTAO))
                 .andExpect(jsonPath("$.senha").value(SENHA));
-
-
 
     }
 
@@ -75,13 +78,46 @@ class CartaoControllerTest {
 
         mockMvc.perform(
                         post("/cartoes")
+                                .with(httpBasic("username", "password"))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(PAYLOAD_INVALIDO))
                 .andExpect(status().isBadRequest());
 
     }
 
-    static Stream<Arguments> cenariosValidos() {
+    @ParameterizedTest(name = "Deve retornar {1} quando cartão {0}")
+    @MethodSource("cenariosObterSaldo")
+    void deveRetornarStatusEsperado(String descricao, int statusEsperado, Optional<Cartao> cartao,
+                                    String bodyEsperado) throws Exception {
+
+        when(service.obterSaldoCartao(NUMERO_CARTAO)).thenReturn(cartao);
+
+        mockMvc.perform(
+                        get("/cartoes/{numeroCartao}", NUMERO_CARTAO)
+                                .with(httpBasic("username", "password")))
+                .andExpect(status().is(statusEsperado))
+                .andExpect(content().string(bodyEsperado));
+
+    }
+
+    @Test
+    void deveRetornar200ComSaldoQuandoCartaoExiste() throws Exception {
+
+        Cartao cartao = new Cartao(NUMERO_CARTAO, SENHA);
+        BigDecimal saldo = BigDecimal.valueOf(495.15);
+        cartao.setSaldo(saldo);
+
+        when(service.obterSaldoCartao(NUMERO_CARTAO)).thenReturn(Optional.of(cartao));
+
+        mockMvc.perform(
+                        get("/cartoes/{numeroCartao}", NUMERO_CARTAO)
+                                .with(httpBasic("username", "password")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(saldo.toString()));
+
+    }
+
+    static Stream<Arguments> cenariosCriarCartao() {
 
         Cartao cartao = new Cartao(NUMERO_CARTAO, SENHA);
         CartaoResponse response = new CartaoResponse(NUMERO_CARTAO, SENHA);
@@ -91,6 +127,16 @@ class CartaoControllerTest {
                         ResultadoCriarCartao.Criado.class),
                 Arguments.of(new ResultadoCriarCartao.JaExistente(cartao), 422, cartao, response,
                         ResultadoCriarCartao.JaExistente.class)
+        );
+    }
+
+    static Stream<Arguments> cenariosObterSaldo() {
+
+        Cartao cartao = new Cartao(NUMERO_CARTAO, SENHA);
+
+        return Stream.of(
+                Arguments.of("cartão existe", 200, Optional.of(cartao), "500.00"),
+                Arguments.of("cartão não existe", 404, Optional.empty(), "")
         );
     }
 }
