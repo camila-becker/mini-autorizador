@@ -1,6 +1,6 @@
 package com.vr.miniautorizador.infrastructure.config;
 
-import com.vr.miniautorizador.application.usecase.CriarCartaoUseCase;
+import com.vr.miniautorizador.application.usecase.CartaoUseCase;
 import com.vr.miniautorizador.domain.repository.CartaoRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class AutorizadorConfig {
 
     @Bean
-    CriarCartaoUseCase criarCartaoUseCase(CartaoRepository cartaoRepository) {
-        return new CriarCartaoUseCase(cartaoRepository);
+    CartaoUseCase criarCartaoUseCase(CartaoRepository cartaoRepository) {
+        return new CartaoUseCase(cartaoRepository);
     }
 }
