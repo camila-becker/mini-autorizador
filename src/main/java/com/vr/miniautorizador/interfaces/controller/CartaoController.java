@@ -11,10 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -46,6 +45,21 @@ public class CartaoController {
             case ResultadoCriarCartao.JaExistente existente ->
                     ResponseEntity.status(HttpStatus.valueOf(422)).body(mapper.toResponse(existente.cartao()));
         };
+
+    }
+
+    @Operation(summary = "Obter saldo do cartão", description = "Retorna o saldo disponível do cartão informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Obtenção com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Cartão não existe"),
+            @ApiResponse(responseCode = "401", description = "Erro de autenticação")
+    })
+    @GetMapping("/{numeroCartao}")
+    public ResponseEntity<BigDecimal> obterSaldoCartao(@PathVariable("numeroCartao") String numeroCartao) {
+
+      return service.obterSaldoCartao(numeroCartao)
+                .map(cartao -> ResponseEntity.ok(cartao.getSaldo()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
     }
 
