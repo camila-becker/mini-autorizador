@@ -1,7 +1,7 @@
 # Mini Autorizador
 
 ## 📌 Descrição
-Este projeto foi desenvolvido como solução para o desafio técnico de autorização de transações.  
+Este projeto foi desenvolvido como solução para o [desafio técnico](./DESAFIO.md) de autorização de transações.  
 Ele simula a criação de cartões, consulta de saldo e autorização de transações financeiras, garantindo consistência e concorrência.
 
 ---
@@ -36,6 +36,32 @@ Ele simula a criação de cartões, consulta de saldo e autorização de transa�
 - No desafio, a senha precisava ser retornada na resposta.
 - Por isso, tratei a senha como **string sem criptografia**.
 - **Decisão consciente:** em um sistema real, a senha deveria ser **criptografada** (ex.: BCrypt) e **nunca retornada** em responses.
+
+---
+
+## 🔐 Autenticação
+
+A API utiliza **Basic Auth** para autenticação.
+
+### Credenciais padrão
+- Usuário: `username`
+- Senha: `password`
+
+### Como enviar
+Inclua o header `Authorization` em cada requisição:
+
+### Exemplo com cURL
+Authorization: Basic base64(username:password)
+```bash
+curl -X POST http://localhost:8080/transacoes \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=" \
+  -d '{
+        "numeroCartao": "1111111111111111",
+        "senha": "1234",
+        "valor": 100.00
+      }'
+```
 
 ---
 
