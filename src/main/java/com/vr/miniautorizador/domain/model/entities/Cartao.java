@@ -18,9 +18,10 @@ public class Cartao {
     @Column(unique = true, nullable = false)
     private String numeroCartao;
 
+    @Column(nullable = false)
     private String senha;
 
-    private BigDecimal saldo;
+    private BigDecimal saldo = new BigDecimal("500.00");
 
     @Version
     private Long version;
