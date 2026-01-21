@@ -1,0 +1,50 @@
+name: CI - Build e Testes com MySQL
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: miniautorizador
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Esperar MySQL subir
+        run: |
+          echo "Aguardando MySQL..."
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL está pronto!"
+              break
+            fi
+            sleep 2
+          done
+
+      - name: Build e Testes
+        run: mvn -B clean verify
